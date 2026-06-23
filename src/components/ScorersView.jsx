@@ -1,0 +1,45 @@
+import { useMemo } from 'react';
+import { buildTopScorers } from '../utils/parsers';
+
+export function ScorersView({ matches, teams }) {
+  const scorers = useMemo(() => buildTopScorers(matches || []), [matches]);
+
+  const teamsById = useMemo(() => {
+    if (!teams) return {};
+    return Object.fromEntries(Object.values(teams).map(t => [t.name_en, t]));
+  }, [teams]);
+
+  return (
+    <div className="scorers-wrap">
+      <div className="section-note">
+        Buteurs calculés depuis les données de match. Les passes décisives ne sont pas disponibles dans cette API.
+      </div>
+      <table className="scorers-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Joueur</th>
+            <th>Équipe</th>
+            <th>Buts</th>
+          </tr>
+        </thead>
+        <tbody>
+          {scorers.map((s, i) => {
+            const team = teamsById[s.team];
+            return (
+              <tr key={s.name} className={i < 3 ? 'top-scorer' : ''}>
+                <td className="mono rank">{i + 1}</td>
+                <td className="player-name">{s.name}</td>
+                <td className="team-cell">
+                  {team?.flag && <img src={team.flag} alt="" width={18} height={13} className="flag" />}
+                  {s.team}
+                </td>
+                <td className="mono goals">{s.goals}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
