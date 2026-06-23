@@ -1,16 +1,51 @@
-# React + Vite
+# La Coupe à Jojo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tableau de bord de suivi de la Coupe du Monde FIFA 2026, pensé pour suivre le tournoi en heure française.
 
-Currently, two official plugins are available:
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Matchs** — scores en direct, résultats et calendrier à venir, filtrables (en cours / aujourd'hui / terminés / à venir). Scorers affichés sous chaque match.
+- **Groupes** — classement des 12 groupes (A→L) avec drapeaux, points, buts pour/contre, différence de buts. Les 2 premiers qualifiés sont mis en évidence.
+- **Buteurs** — top scorers calculés depuis les données de match, avec fusion automatique des variantes de noms (ex. `K. Mbappé` et `Kylian Mbappé` → même entrée).
+- **Bracket** — phases éliminatoires (Seizièmes → Finale), avec les équipes TBD affichées dès que la qualification est connue.
+- **Heure de Paris** — tous les horaires sont convertis en CEST (UTC+2) en tenant compte du fuseau horaire de chaque stade (EDT/CDT/PDT).
+- **Dark mode** — toggle jour/nuit, suit les préférences système par défaut.
+- Refresh automatique toutes les 60 secondes.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + Vite
+- CSS custom properties (pas de framework UI)
+- API : [worldcup26.ir](https://worldcup26.ir) — open source, sans clé requise
 
-## Expanding the ESLint configuration
+## Lancer en local
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+## Déployer
+
+```bash
+npm run build
+# Le dossier dist/ est prêt pour Netlify, Vercel, ou n'importe quel hébergeur statique.
+```
+
+## Structure
+
+```
+src/
+├── components/
+│   ├── BracketView.jsx     # Phases éliminatoires
+│   ├── GroupsView.jsx      # Classements de groupes
+│   ├── MatchesView.jsx     # Liste des matchs
+│   └── ScorersView.jsx     # Top buteurs
+├── hooks/
+│   └── useApi.js           # Fetch générique avec auto-refresh
+├── services/
+│   └── api.js              # Appels API worldcup26.ir
+├── utils/
+│   └── parsers.js          # Parsing scorers, conversion timezone Paris, merge noms
+└── App.jsx
+```
