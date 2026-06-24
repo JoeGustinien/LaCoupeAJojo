@@ -48,7 +48,8 @@ export function parseScorers(str) {
 }
 
 export function playerName(entry) {
-  return entry.replace(/\s+\d+(\+\d+)?'$/, '').trim();
+  // Strip minute notation and anything after (handles 45', 45+2', 45'+5', 45'+5'(p), (OG), etc.)
+  return entry.replace(/\s+\d+.*$/, '').trim();
 }
 
 export function buildTopScorers(matches) {
@@ -56,6 +57,7 @@ export function buildTopScorers(matches) {
   matches.forEach(m => {
     const tag = (scorersStr, teamName) =>
       parseScorers(scorersStr).forEach(e => {
+        if (/\(og\)/i.test(e)) return; // buts contre son camp
         const name = playerName(e);
         if (!name) return;
         if (!tally[name]) tally[name] = { name, team: teamName, goals: 0 };
