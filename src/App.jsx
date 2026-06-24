@@ -5,12 +5,14 @@ import { GroupsView } from './components/GroupsView';
 import { MatchesView } from './components/MatchesView';
 import { ScorersView } from './components/ScorersView';
 import { BracketView } from './components/BracketView';
+import { FormatView } from './components/FormatView';
 
 const TABS = [
   { key: 'matchs',  label: 'Matchs' },
   { key: 'groupes', label: 'Groupes' },
   { key: 'buteurs', label: 'Buteurs' },
   { key: 'bracket', label: 'Bracket' },
+  { key: 'format',  label: 'Format & règles' },
 ];
 
 export default function App() {
@@ -71,6 +73,7 @@ export default function App() {
         {!loading && tab === 'groupes' && <GroupsView groups={groupsData?.groups} teams={teams} />}
         {!loading && tab === 'buteurs' && <ScorersView matches={matchesData?.games} teams={teams} />}
         {!loading && tab === 'bracket' && <BracketView matches={matchesData?.games} teams={teams} />}
+        {!loading && tab === 'format'  && <FormatView groups={groupsData?.groups} teams={teams} />}
       </main>
 
       <footer className="app-footer">

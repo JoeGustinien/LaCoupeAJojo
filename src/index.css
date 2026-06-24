@@ -459,3 +459,87 @@ body {
   background: var(--border);
   margin: 2px 0;
 }
+
+/* ─── FORMAT & RÈGLES ────────────────────────────────────── */
+.format-wrap { display: flex; flex-direction: column; gap: 36px; max-width: 680px; }
+
+.format-section {}
+
+.format-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 8px;
+}
+
+.format-intro {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.format-steps { display: flex; flex-direction: column; gap: 8px; }
+
+.format-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 14px;
+}
+
+.format-step.highlight-step {
+  border-color: var(--qualify);
+  background: color-mix(in srgb, var(--qualify) 5%, var(--bg-card));
+}
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+  min-width: 20px;
+}
+
+.highlight-step .step-num { color: var(--qualify); }
+
+.step-label {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.step-desc strong { color: var(--text); }
+
+.thirds-table { margin-top: 4px; }
+
+.badge-qualify {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--qualify);
+  background: color-mix(in srgb, var(--qualify) 10%, transparent);
+  padding: 1px 6px;
+  border: 1px solid var(--qualify);
+  border-radius: var(--radius);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-out {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: var(--radius);
+  letter-spacing: 0.05em;
+}
