@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useApi } from './hooks/useApi';
-import { getGroups, getTeams, getMatches } from './services/api';
+import { getGroups, getTeams, getMatches, getZafronixMatches } from './services/api';
 import { GroupsView } from './components/GroupsView';
 import { MatchesView } from './components/MatchesView';
 import { ScorersView } from './components/ScorersView';
@@ -28,13 +28,14 @@ export default function App() {
   const { data: groupsData, loading: gl } = useApi(getGroups, 60_000);
   const { data: teamsData, loading: tl } = useApi(getTeams);
   const { data: matchesData, loading: ml } = useApi(getMatches, 60_000);
+  const { data: zafronixData, loading: zl } = useApi(getZafronixMatches, 60_000);
 
   const teams = useMemo(() => {
     if (!teamsData?.teams) return {};
     return Object.fromEntries(teamsData.teams.map(t => [t.id, t]));
   }, [teamsData]);
 
-  const loading = gl || tl || ml;
+  const loading = gl || tl || ml || zl;
 
   return (
     <div className="app">
@@ -71,13 +72,13 @@ export default function App() {
 
         {!loading && tab === 'matchs'  && <MatchesView matches={matchesData?.games} teams={teams} />}
         {!loading && tab === 'groupes' && <GroupsView groups={groupsData?.groups} teams={teams} />}
-        {!loading && tab === 'buteurs' && <ScorersView matches={matchesData?.games} teams={teams} />}
+        {!loading && tab === 'buteurs' && <ScorersView matches={zafronixData?.data} teams={teams} />}
         {!loading && tab === 'bracket' && <BracketView matches={matchesData?.games} teams={teams} />}
         {!loading && tab === 'format'  && <FormatView groups={groupsData?.groups} teams={teams} />}
       </main>
 
       <footer className="app-footer">
-        Données : worldcup26.ir · Actualisation automatique toutes les 60s
+        Données : worldcup26.ir · zafronix.com · Actualisation automatique toutes les 60s
       </footer>
     </div>
   );

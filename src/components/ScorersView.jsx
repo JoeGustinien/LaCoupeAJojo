@@ -1,10 +1,24 @@
 import { useMemo } from 'react';
-import { buildTopScorers } from '../utils/parsers';
+
+function buildTopScorers(matches) {
+  const tally = {};
+  (matches || []).forEach(m => {
+    (m.goals || []).forEach(g => {
+      if (g.type === 'own_goal') return;
+      const team = g.team === 'home' ? m.homeTeam : m.awayTeam;
+      const name = g.scorer;
+      if (!name) return;
+      if (!tally[name]) tally[name] = { name, team, goals: 0 };
+      tally[name].goals++;
+    });
+  });
+  return Object.values(tally).sort((a, b) => b.goals - a.goals);
+}
 
 export function ScorersView({ matches, teams }) {
-  const scorers = useMemo(() => buildTopScorers(matches || []), [matches]);
+  const scorers = useMemo(() => buildTopScorers(matches), [matches]);
 
-  const teamsById = useMemo(() => {
+  const teamsByName = useMemo(() => {
     if (!teams) return {};
     return Object.fromEntries(Object.values(teams).map(t => [t.name_en, t]));
   }, [teams]);
@@ -12,7 +26,7 @@ export function ScorersView({ matches, teams }) {
   return (
     <div className="scorers-wrap">
       <div className="section-note">
-        Buteurs calculés depuis les données de match. Les passes décisives ne sont pas disponibles dans cette API.
+        Buteurs calculés depuis les données Zafronix. Les passes décisives ne sont pas encore disponibles.
       </div>
       <table className="scorers-table">
         <thead>
@@ -25,7 +39,7 @@ export function ScorersView({ matches, teams }) {
         </thead>
         <tbody>
           {scorers.map((s, i) => {
-            const team = teamsById[s.team];
+            const team = teamsByName[s.team];
             return (
               <tr key={s.name} className={i < 3 ? 'top-scorer' : ''}>
                 <td className="mono rank">{i + 1}</td>
