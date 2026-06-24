@@ -10,6 +10,15 @@ const ROUNDS = [
   { key: 'final', label: 'Finale' },
 ];
 
+function translateLabel(label) {
+  if (!label) return label;
+  return label
+    .replace(/\bWinner\b/g, 'Vainqueur')
+    .replace(/\bLoser\b/g, 'Perdant')
+    .replace(/\bMatch\b/g, 'Match')
+    .replace(/\bGroup\b/g, 'Groupe');
+}
+
 export function BracketView({ matches, teams }) {
   const byRound = useMemo(() => {
     const map = {};
@@ -60,7 +69,7 @@ function BracketMatch({ match: m, teams }) {
       <div className={`bm-team${finished && parseInt(m.home_score) > parseInt(m.away_score) ? ' bm-winner' : ''}`}>
         <span className="bm-team-name">
           {homeTeam?.flag && <img src={homeTeam.flag} alt="" width={18} height={13} className="flag" />}
-          {m.home_team_name_en || m.home_team_label || '?'}
+          {m.home_team_name_en || translateLabel(m.home_team_label) || '?'}
         </span>
         <span className="mono">{!tbd && (finished || live) ? m.home_score : ''}</span>
       </div>
@@ -70,7 +79,7 @@ function BracketMatch({ match: m, teams }) {
       <div className={`bm-team${finished && parseInt(m.away_score) > parseInt(m.home_score) ? ' bm-winner' : ''}`}>
         <span className="bm-team-name">
           {awayTeam?.flag && <img src={awayTeam.flag} alt="" width={18} height={13} className="flag" />}
-          {m.away_team_name_en || m.away_team_label || '?'}
+          {m.away_team_name_en || translateLabel(m.away_team_label) || '?'}
         </span>
         <span className="mono">{!tbd && (finished || live) ? m.away_score : ''}</span>
       </div>

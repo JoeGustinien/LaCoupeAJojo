@@ -77,7 +77,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        Data: worldcup26.ir · Refresh automatique toutes les 60s
+        Données : worldcup26.ir · Actualisation automatique toutes les 60s
       </footer>
     </div>
   );

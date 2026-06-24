@@ -27,7 +27,7 @@ export function MatchesView({ matches, teams }) {
     const map = {};
     filtered.forEach(m => {
       const paris = toParisTime(m.local_date, m.stadium_id);
-      const key = paris?.dateKey ?? m.local_date?.split(' ')[0] ?? 'TBD';
+      const key = paris?.dateKey ?? m.local_date?.split(' ')[0] ?? 'À définir';
       (map[key] ??= []).push(m);
     });
     return Object.entries(map).sort(([a], [b]) => compareDateKeys(a, b));
@@ -123,6 +123,6 @@ function MatchCard({ match: m, teams }) {
 
 function labelForGroup(group, type) {
   if (!type || type === 'group') return `Groupe ${group}`;
-  const labels = { r32: 'Huitièmes', r16: 'Seizièmes', qf: 'Quarts', sf: 'Demies', third: '3e place', final: 'Finale' };
+  const labels = { r32: 'Seizièmes', r16: 'Huitièmes', qf: 'Quarts', sf: 'Demies', third: '3e place', final: 'Finale' };
   return labels[type] ?? group;
 }
