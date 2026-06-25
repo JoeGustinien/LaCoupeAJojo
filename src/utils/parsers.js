@@ -52,6 +52,16 @@ export function playerName(entry) {
   return entry.replace(/\s+\d+.*$/, '').trim();
 }
 
+// Extrait le nom de famille en ignorant initiales et particules courtes
+// "K. Mbappé" → "Mbappé", "Y.Ayari" → "Ayari", "I.B. Hwang" → "Hwang"
+function extractSurname(name) {
+  const parts = name.split(/[\s.]+/).filter(p => p.length > 1);
+  return parts.at(-1) ?? name;
+}
+
+// Détecte un nom au format initial : "K.", "Y.", "I.B.", "H.G."
+const IS_INITIAL = /^[A-ZÀÁÂÄÇÉÈÊËÎÏÑÓÔÙÚÛÜ]\./;
+
 export function buildTopScorers(matches) {
   const tally = {};
   matches.forEach(m => {
@@ -67,17 +77,15 @@ export function buildTopScorers(matches) {
     tag(m.away_scorers, m.away_team_name_en);
   });
 
-  // Merge "K. Mbappé" (initial format) into "Kylian Mbappé" (full name)
-  // when same surname and same first letter
+  // Fusionne "K. Mbappé" / "Y.Ayari" dans le nom complet si même initiale + même nom de famille
   const bySurname = {};
   Object.values(tally).forEach(e => {
-    const surname = e.name.split(' ').pop();
-    (bySurname[surname] ??= []).push(e);
+    (bySurname[extractSurname(e.name)] ??= []).push(e);
   });
   Object.values(bySurname).forEach(group => {
     if (group.length < 2) return;
-    const initials = group.filter(e => /^[A-ZÀÁÂÄÇÉÈÊËÎÏÑÓÔÙÚÛÜ]\. /.test(e.name));
-    const fulls   = group.filter(e => !/^[A-ZÀÁÂÄÇÉÈÊËÎÏÑÓÔÙÚÛÜ]\. /.test(e.name));
+    const initials = group.filter(e => IS_INITIAL.test(e.name));
+    const fulls    = group.filter(e => !IS_INITIAL.test(e.name));
     initials.forEach(init => {
       const letter = init.name[0].toUpperCase();
       const match = fulls.find(f => f.name[0].toUpperCase() === letter);

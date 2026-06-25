@@ -1,22 +1,8 @@
 import { useMemo } from 'react';
-
-function buildTopScorers(matches) {
-  const tally = {};
-  (matches || []).forEach(m => {
-    (m.goals || []).forEach(g => {
-      if (g.type === 'own_goal') return;
-      const team = g.team === 'home' ? m.homeTeam : m.awayTeam;
-      const name = g.scorer;
-      if (!name) return;
-      if (!tally[name]) tally[name] = { name, team, goals: 0 };
-      tally[name].goals++;
-    });
-  });
-  return Object.values(tally).sort((a, b) => b.goals - a.goals);
-}
+import { buildTopScorers } from '../utils/parsers';
 
 export function ScorersView({ matches, teams }) {
-  const scorers = useMemo(() => buildTopScorers(matches), [matches]);
+  const scorers = useMemo(() => buildTopScorers(matches || []), [matches]);
 
   const teamsByName = useMemo(() => {
     if (!teams) return {};
@@ -26,7 +12,7 @@ export function ScorersView({ matches, teams }) {
   return (
     <div className="scorers-wrap">
       <div className="section-note">
-        Buteurs calculés depuis les données Zafronix. Les passes décisives ne sont pas encore disponibles.
+        Buteurs calculés depuis les données de match. Les passes décisives ne sont pas disponibles dans cette API.
       </div>
       <table className="scorers-table">
         <thead>
