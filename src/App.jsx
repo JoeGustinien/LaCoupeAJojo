@@ -17,9 +17,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('matchs');
-  const [dark, setDark] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
