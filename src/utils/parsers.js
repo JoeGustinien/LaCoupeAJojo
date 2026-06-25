@@ -67,6 +67,8 @@ const NAME_CORRECTIONS = {
   'Asmaail Saibari':     'Ismail Saibari',      // Maroc (aussi en "I. Saibari")
   'Nvnv Mndz':           'Nuno Mendes',         // Portugal
   'Prvmis Divid':        'Promise David',       // Canada
+  'Armin Mhmich':        'Ermin Mahmić',        // Bosnie-Herzégovine
+  'Aiash Ivida':         'Ayase Ueda',          // Japon
 };
 
 // Extrait le nom de famille en ignorant initiales et particules courtes
