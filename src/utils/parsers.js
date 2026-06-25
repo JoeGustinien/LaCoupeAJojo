@@ -52,6 +52,23 @@ export function playerName(entry) {
   return entry.replace(/\s+\d+.*$/, '').trim();
 }
 
+// Corrections manuelles pour les noms corrompus par l'API (translittération cassée)
+// Clé = nom tel que renvoyé par l'API, valeur = nom correct
+const NAME_CORRECTIONS = {
+  'Dniz Avndav':         'Deniz Undav',        // Allemagne
+  'Kvdi Khakpv':         'Cody Gakpo',          // Pays-Bas
+  'Dnil Mvnvz':          'Daniel Muñoz',        // Colombie
+  'Lviiz Diaz':          'Luis Díaz',           // Colombie
+  'Rvbn Vargas':         'Rubén Vargas',        // Suisse (aussi présent sans corruption)
+  'Jvhan Mnzambi':       'Johan Manzambi',      // Suisse
+  'Kail Larin':          'Cyle Larin',          // Canada (aussi en "C. Larin")
+  'Jvlian Kviinvnz':    'Julián Quiñones',     // Mexique (aussi en "J. Quiñones")
+  'Markvs Hlmgrn Pdrsn': 'Markus Holmgren Pedersen', // Norvège
+  'Asmaail Saibari':     'Ismail Saibari',      // Maroc (aussi en "I. Saibari")
+  'Nvnv Mndz':           'Nuno Mendes',         // Portugal
+  'Prvmis Divid':        'Promise David',       // Canada
+};
+
 // Extrait le nom de famille en ignorant initiales et particules courtes
 // "K. Mbappé" → "Mbappé", "Y.Ayari" → "Ayari", "I.B. Hwang" → "Hwang"
 function extractSurname(name) {
@@ -68,8 +85,9 @@ export function buildTopScorers(matches) {
     const tag = (scorersStr, teamName) =>
       parseScorers(scorersStr).forEach(e => {
         if (/\(og\)/i.test(e)) return; // buts contre son camp
-        const name = playerName(e);
-        if (!name) return;
+        const raw = playerName(e);
+        if (!raw) return;
+        const name = NAME_CORRECTIONS[raw] ?? raw;
         if (!tally[name]) tally[name] = { name, team: teamName, goals: 0 };
         tally[name].goals++;
       });
